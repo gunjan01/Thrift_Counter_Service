@@ -1,0 +1,24 @@
+version: '2'
+services:
+  thrift:
+    image: thrift:0.9.2
+    volumes:
+      - .:/data
+    working_dir: /data
+    command: thrift --gen rb example.thrift
+  bundle:
+    image: ruby:2.3
+    volumes:
+      - .:/data
+    working_dir: /data
+    command: bundle package --all
+  test:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
+  ci:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
