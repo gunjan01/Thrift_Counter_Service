@@ -4,18 +4,21 @@ $:.unshift '../../lib/rb/lib'
 
 require 'thrift'
 require 'bundler/setup'
-require 'counter'
+require 'example'
 
+class MyClient < Thrifter.build(Counter::Client)
 
-transport = Thrift::BufferedTransport.new(Thrift::Socket.new(ARGV[0],ARGV[1]))
-protocol = Thrift::BinaryProtocol.new(transport)
-client = Counter::Client.new(protocol)
+    config.pool_size = 12 
+    config.pool_timeout = 0.15
 
-transport.open()
+    config.rpc_timeout = 0.15
+    config.keep_alive = false 
 
-client.increment(5.0)
-client.getCounter
+    config.uri = "tcp://#{ARGV[0]}:#{ARGV[1]}"
 
-puts client.getCounter
+    def increment(number = 1)
+        super 
+    end 
 
-transport.close()
+    
+end
