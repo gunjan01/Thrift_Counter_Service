@@ -6,12 +6,15 @@ GEN_RB:=gen-rb/Example.rb
 Gemfile.lock: Gemfile
 	$(DC) run --rm bundle
 
-$(GEN_RB): example.thrift
+gen-rb/examp]e.rb: example.thrift
+	$(DC) run --rm thirft
+
+$(GEN_RB): example.thrift gen-rb/example.rb
 	$(DC) run --rm thrift \
 		thrift --gen rb $<
 
-$(ENVIRONMENT): Gemfile.lock
-	$(DC) build
+$(ENVIRONMENT): Gemfile.lock 
+	$(DC) up --build -d
 	mkdir -p $(@D)
 	touch @$
 
@@ -28,7 +31,7 @@ test-image: $(ENVIRONMENT)
 .PHONY: test-smoke
 test-smoke: $(ENVIRONMENT)
 	$(DC) run --rm ci \
-		ruby test/smoke/server_test.rb server:9090
+		ruby -I ./gen-rb test/smoke/server_test.rb server:9090
 
 .PHONY:clean
 clean:

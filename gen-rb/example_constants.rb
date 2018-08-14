@@ -6,3 +6,4 @@
 
 require 'thrift'
 require 'example_types'
+

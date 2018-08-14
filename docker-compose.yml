@@ -17,6 +17,10 @@ services:
       context: .
     volumes:
       - .:/usr/src/app
+  server:
+    build:
+      context: .
+    command: ruby ./start-server.rb 9090
   ci:
     build:
       context: .
